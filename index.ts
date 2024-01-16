@@ -1,21 +1,14 @@
-import Job from "./job";
-import Queue, { DoneCallback } from "./queue";
+import express, { Request, Response } from "express";
+import { executeSampleJobs } from "./example";
 
-const job1 = new Job("1", { message: "hello world" });
-const job2 = new Job("2", { message: "hello world 2" });
+const app = express();
+const port = 7000;
 
-const jobQueue = new Queue("test", { host: "127.0.0.1", port: 6379 });
+app.get("/", async (req: Request, res: Response) => {
+  res.send("Hello world!!!");
+  executeSampleJobs();
+});
 
-jobQueue.enqueue(job1);
-jobQueue.enqueue(job2);
-
-jobQueue.processJobs((job: Job, done: DoneCallback) => {
-  try {
-    console.log(
-      `Job number ${job.id} is executed with the message ${job.data.message}`
-    );
-    done(null, "successfull");
-  } catch (error) {
-    done(error as Error);
-  }
+app.listen(port, () => {
+  console.log(`[server]: Server is running at http://localhost:${port}`);
 });
