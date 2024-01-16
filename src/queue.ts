@@ -16,11 +16,14 @@ interface EnqueueProps {
 }
 
 class Queue {
+  // Name of the key to be stored on redis
   private queueName: string = "default-queue";
+  // Configuration of the redis connection
   private redisOptions: RedisConnection = {
     host: "127.0.0.1",
     port: 6379,
   };
+  // Redis instance
   private redisClient: RedisClientType;
 
   constructor(queueName: string, redisOptions?: RedisConnection) {
@@ -29,6 +32,8 @@ class Queue {
       this.redisOptions.host = redisOptions.host;
       this.redisOptions.port = redisOptions.port;
     }
+
+    // Creating the redis client
     this.redisClient = createClient({
       url: `redis://${this.redisOptions.host}:${this.redisOptions.port}`,
     });
@@ -37,6 +42,7 @@ class Queue {
     this.connectToRedis();
   }
 
+  // Connect to redis
   private async connectToRedis() {
     this.redisClient.on("error", (err) => {
       console.log(err, "failed");
@@ -44,6 +50,7 @@ class Queue {
     await this.redisClient.connect();
   }
 
+  // Execute a job
   private async jobExecution(
     functionToExecute: (job: Job, done: DoneCallback) => void,
     enqueueProps: EnqueueProps
