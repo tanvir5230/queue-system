@@ -11,11 +11,12 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "nodemon": "latest",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3",
-    "nodemon": "latest"
+    "typescript": "^5.3.3"
   },
   "dependencies": {
+    "express": "^4.18.2",
     "redis": "^4.6.12"
   }
 }
