@@ -15,6 +15,15 @@ interface EnqueueProps {
   delay?: number;
 }
 
+export interface FunctionToExecuteCallbackProps {
+  job: Job;
+  done: DoneCallback;
+}
+
+export interface FunctionToExecuteCallback {
+  ({ job, done }: FunctionToExecuteCallbackProps): void;
+}
+
 class Queue {
   // Name of the key to be stored on redis
   private queueName: string = "default-queue";
@@ -52,22 +61,31 @@ class Queue {
 
   // Execute a job
   private async jobExecution(
-    functionToExecute: (job: Job, done: DoneCallback) => void,
+    functionToExecute: ({
+      job,
+      done,
+    }: {
+      job: Job;
+      done: DoneCallback;
+    }) => void,
     enqueueProps: EnqueueProps
   ) {
     await new Promise<void>((resolve) => {
-      functionToExecute(enqueueProps.job, (error, result) => {
-        if (error) {
-          console.error(
-            `Error processing job ${enqueueProps.job.id}: ${error.message}`
-          );
-        } else {
-          console.log(
-            `Job ${enqueueProps.job.id} processed successfully. Result:`,
-            result
-          );
-        }
-        resolve();
+      functionToExecute({
+        job: enqueueProps.job,
+        done: (error, result) => {
+          if (error) {
+            console.error(
+              `Error processing job ${enqueueProps.job.id}: ${error.message}`
+            );
+          } else {
+            console.log(
+              `Job ${enqueueProps.job.id} processed successfully. Result:`,
+              result
+            );
+          }
+          resolve();
+        },
       });
     });
   }
@@ -95,7 +113,7 @@ class Queue {
 
   // Processing the jobs
   async processJobs(
-    functionToExecute: (job: Job, done: DoneCallback) => void
+    functionToExecute: FunctionToExecuteCallback
   ): Promise<void> {
     let continueJob: boolean = true;
     while (continueJob) {

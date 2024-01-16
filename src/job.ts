@@ -1,7 +1,7 @@
 class Job {
-  id: string;
+  id: number;
   data: any;
-  constructor(id: string, data: any) {
+  constructor(id: number, data: any) {
     this.id = id;
     this.data = data;
   }

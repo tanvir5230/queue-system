@@ -1,16 +1,16 @@
 import Job from "./job";
-import Queue, { DoneCallback } from "./queue";
+import Queue, { FunctionToExecuteCallbackProps } from "./queue";
 
 export function executeSampleJobs() {
-  const job1 = new Job("1", { message: "hello world" });
-  const job2 = new Job("2", { message: "hello world 2" });
+  const job1 = new Job(1, { message: "hello world" });
+  const job2 = new Job(2, { message: "hello world 2" });
 
   const jobQueue = new Queue("test", { host: "127.0.0.1", port: 6379 });
 
   jobQueue.enqueue({ job: job1, delay: 2000 });
-  jobQueue.enqueue({ job: job2, delay: 5000 });
+  jobQueue.enqueue({ job: job2, delay: 8000 });
 
-  jobQueue.processJobs((job: Job, done: DoneCallback) => {
+  jobQueue.processJobs(({ job, done }: FunctionToExecuteCallbackProps) => {
     try {
       console.log(
         `Job number ${job.id} is executed with the message ${job.data.message}`
