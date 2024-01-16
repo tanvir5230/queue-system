@@ -6,6 +6,10 @@ interface RedisConnection {
   port: number;
 }
 
+export interface DoneCallback {
+  (error: Error | null, result?: any): void;
+}
+
 class Queue {
   private queueName: string = "default-queue";
   private redisOptions: RedisConnection = {
@@ -41,7 +45,6 @@ class Queue {
   async dequeue(): Promise<Job | null> {
     try {
       const result = await this.redisClient.lPop(this.queueName);
-      console.log(result, "from dequeue");
 
       if (result) {
         return JSON.parse(result) as Job;
@@ -55,12 +58,26 @@ class Queue {
   }
 
   // Processing the jobs
-  async processJobs(functionToExecute: Function): Promise<void> {
+  async processJobs(
+    functionToExecute: (job: Job, done: DoneCallback) => void
+  ): Promise<void> {
     let continueJob: boolean = true;
     while (continueJob) {
       const job = await this.dequeue();
       if (job) {
-        functionToExecute();
+        await new Promise<void>((resolve) => {
+          functionToExecute(job, (error, result) => {
+            if (error) {
+              console.error(`Error processing job ${job.id}: ${error.message}`);
+            } else {
+              console.log(
+                `Job ${job.id} processed successfully. Result:`,
+                result
+              );
+            }
+            resolve();
+          });
+        });
       } else {
         continueJob = false;
       }
