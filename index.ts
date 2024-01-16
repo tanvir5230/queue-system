@@ -4,7 +4,7 @@ import Queue, { DoneCallback } from "./queue";
 const job1 = new Job("1", { message: "hello world" });
 const job2 = new Job("2", { message: "hello world 2" });
 
-const jobQueue = new Queue("test");
+const jobQueue = new Queue("test", { host: "127.0.0.1", port: 6379 });
 
 jobQueue.enqueue(job1);
 jobQueue.enqueue(job2);

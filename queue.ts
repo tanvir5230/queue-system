@@ -1,4 +1,4 @@
-import { createClient } from "redis";
+import { RedisClientType, createClient } from "redis";
 import Job from "./job";
 
 interface RedisConnection {
@@ -16,7 +16,7 @@ class Queue {
     host: "127.0.0.1",
     port: 6379,
   };
-  private redisClient = createClient();
+  private redisClient: RedisClientType;
 
   constructor(queueName: string, redisOptions?: RedisConnection) {
     this.queueName = queueName;
@@ -24,6 +24,9 @@ class Queue {
       this.redisOptions.host = redisOptions.host;
       this.redisOptions.port = redisOptions.port;
     }
+    this.redisClient = createClient({
+      url: `redis://${this.redisOptions.host}:${this.redisOptions.port}`,
+    });
 
     // initializing redis connection
     this.connectToRedis();
