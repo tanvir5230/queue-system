@@ -12,7 +12,8 @@
   "license": "ISC",
   "devDependencies": {
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "nodemon": "latest"
   },
   "dependencies": {
     "redis": "^4.6.12"
