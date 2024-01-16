@@ -1,7 +1,7 @@
-import express, { Request, Response } from "express";
+import express, { Express, Request, Response } from "express";
 import { executeSampleJobs } from "./example";
 
-const app = express();
+const app: Express = express();
 const port = 7000;
 
 app.get("/", async (req: Request, res: Response) => {
