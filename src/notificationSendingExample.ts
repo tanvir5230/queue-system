@@ -18,7 +18,7 @@ export async function executeNotificationSendingExample() {
   });
 
   // Enqueue notification jobs for each user
-  users.map(async (user, i) => {
+  users.map((user, i) => {
     const job = new Job(i + 1, user);
     notificationQueue.enqueue({
       job,
