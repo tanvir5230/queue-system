@@ -25,7 +25,7 @@ export async function executeNotificationSendingExample() {
     });
   });
 
-  notificationQueue.processJobs(sendNotification);
+  return notificationQueue.processJobs(sendNotification);
 }
 
 // Function to simulate sending a notification to a user

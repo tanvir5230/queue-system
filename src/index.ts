@@ -11,8 +11,21 @@ app.get("/", async (req: Request, res: Response) => {
 });
 
 app.get("/send-notification", async (req: Request, res: Response) => {
-  res.status(200).json({ message: "Notification jobs enqueued successfully" });
-  await executeNotificationSendingExample();
+  try {
+    // Send an initial response before executing executeNotificationSendingExample
+    res.write("Sending notifications...");
+
+    // Execute notification sending example
+    await executeNotificationSendingExample();
+
+    // Send a final response after the execution is complete
+    res.write("All Notifications sent successfully!!!");
+    res.end();
+  } catch (error) {
+    // Handle errors and send an error response
+    console.error("Error sending notifications:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
 app.listen(port, () => {
