@@ -7,8 +7,8 @@ export function executeSampleJobs() {
 
   const jobQueue = new Queue("test", { host: "127.0.0.1", port: 6379 });
 
-  jobQueue.enqueue(job1);
-  jobQueue.enqueue(job2);
+  jobQueue.enqueue({ job: job1, delay: 2000 });
+  jobQueue.enqueue({ job: job2, delay: 5000 });
 
   jobQueue.processJobs((job: Job, done: DoneCallback) => {
     try {
