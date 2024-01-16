@@ -5,9 +5,6 @@ class Job {
     this.id = id;
     this.data = data;
   }
-  execute(functionToExecute: Function) {
-    functionToExecute();
-  }
 }
 
 export default Job;
