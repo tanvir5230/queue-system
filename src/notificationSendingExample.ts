@@ -3,11 +3,11 @@ import Queue, { FunctionToExecuteCallbackProps } from "./queue";
 
 export async function executeNotificationSendingExample() {
   // Sample user data creation logic
-  const users = Array.from({ length: 10000 }, (e, i) => i).map((i) => {
+  const users = Array.from({ length: 10000 }, (e, i) => i + 1).map((i) => {
     return {
-      id: i + 1,
-      name: `User ${i + 1}`,
-      email: `user${i + 1}@example.com`,
+      id: i,
+      name: `User ${i}`,
+      email: `user${i}@example.com`,
     };
   });
 
@@ -18,12 +18,12 @@ export async function executeNotificationSendingExample() {
   });
 
   // Enqueue notification jobs for each user
-  for (const user of users) {
-    const job = new Job(user.id, user);
+  users.map(async (user, i) => {
+    const job = new Job(i + 1, user);
     notificationQueue.enqueue({
       job,
     });
-  }
+  });
 
   notificationQueue.processJobs(sendNotification);
 }
