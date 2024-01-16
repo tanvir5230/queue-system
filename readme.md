@@ -6,3 +6,7 @@ This is a simple example of an Express API without using any library for queue-b
 
 - Node.js and npm installed
 - Redis server running locally or at a specified host and port
+
+## Workflow
+
+![workflow](documentation/workflow.png)
