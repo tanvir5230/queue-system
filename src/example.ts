@@ -1,5 +1,6 @@
+import { FunctionToExecuteCallbackProps } from "./Types";
 import Job from "./job";
-import Queue, { FunctionToExecuteCallbackProps } from "./queue";
+import Queue from "./queue";
 
 export function executeSampleJobs() {
   const job1 = new Job(1, { message: "hello world" });

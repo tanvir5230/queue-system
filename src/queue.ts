@@ -1,29 +1,11 @@
 import { RedisClientType, createClient } from "redis";
+import {
+  DoneCallback,
+  EnqueueProps,
+  FunctionToExecuteCallback,
+  RedisConnection,
+} from "./Types";
 import Job from "./job";
-
-interface RedisConnection {
-  host: string;
-  port: number;
-}
-
-export interface DoneCallback {
-  (error: Error | null, result?: any): void;
-}
-
-interface EnqueueProps {
-  job: Job;
-  delay?: number;
-  retry?: number;
-}
-
-export interface FunctionToExecuteCallbackProps {
-  job: Job;
-  done: DoneCallback;
-}
-
-export interface FunctionToExecuteCallback {
-  ({ job, done }: FunctionToExecuteCallbackProps): void;
-}
 
 class Queue {
   // Name of the key to be stored on redis

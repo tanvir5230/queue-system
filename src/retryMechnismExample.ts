@@ -1,5 +1,6 @@
+import { FunctionToExecuteCallbackProps } from "./Types";
 import Job from "./job";
-import Queue, { FunctionToExecuteCallbackProps } from "./queue";
+import Queue from "./queue";
 
 export const simulateRetry = async () => {
   const retryQueue = new Queue("retryQueue");
