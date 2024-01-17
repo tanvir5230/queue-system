@@ -31,8 +31,8 @@ app.get("/send-notification", async (req: Request, res: Response) => {
 
 // Simulation of retry mechanism
 app.get("/retry", async (req: Request, res: Response) => {
-  await simulateRetry();
   res.send("Retry Mechanism simulated");
+  await simulateRetry();
 });
 
 app.listen(port, () => {

@@ -61,13 +61,11 @@ class Queue {
   }
 
   // Disconnect redis connection
-  async disconnect(): Promise<void> {
-    return new Promise<void>((resolve) => {
-      this.redisClient.quit().then((status) => {
-        console.log(status);
-      });
-    });
-  }
+  // async disconnect(): Promise<void> {
+  //   this.redisClient.quit().then((value) => {
+  //     console.log("Redis Connection is closed. " + value);
+  //   });
+  // }
 
   // Execute a job
   private async jobExecution(
@@ -102,7 +100,7 @@ class Queue {
             }
 
             if (isSuccess || retryNumber <= 0) {
-              if (retryNumber === 0) {
+              if (enqueueProps?.retry && retryNumber === 0) {
                 console.log("Max retry attempt reached!!!");
               }
               resolve();
