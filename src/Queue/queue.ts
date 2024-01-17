@@ -4,7 +4,7 @@ import {
   EnqueueProps,
   FunctionToExecuteCallback,
   RedisConnection,
-} from "./Types";
+} from "../Types";
 import Job from "./job";
 
 class Queue {

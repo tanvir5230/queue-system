@@ -1,7 +1,7 @@
 import express, { Express, Request, Response } from "express";
-import { executeSampleJobs } from "./example";
-import { executeNotificationSendingExample } from "./notificationSendingExample";
-import { simulateRetry } from "./retryMechnismExample";
+import { executeSampleJobs } from "./Examples/example";
+import { executeNotificationSendingExample } from "./Examples/notificationSendingExample";
+import { simulateRetry } from "./Examples/retryMechnismExample";
 
 const app: Express = express();
 const port = 7000;

@@ -1,4 +1,4 @@
-import Job from "../job";
+import Job from "../Queue/job";
 
 export interface RedisConnection {
   host: string;
