@@ -1,6 +1,11 @@
 # Express and Custom Queue Example (Without Any Library except for redis)
 
-This is a simple example of an Express API without using any library for queue-based job processing.
+In this repository, I have created a queue system without using any library like Bull. I have used redis for building the queue system.
+I have also added some example scenarios on how to use the created system. I have added three examples:
+
+1. Simple job execution
+2. How to send notification
+3. How retry mechanism works
 
 ## Prerequisites
 
