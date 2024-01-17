@@ -19,7 +19,7 @@ app.get("/send-notification", async (req: Request, res: Response) => {
     await executeNotificationSendingExample();
 
     // Send a final response after the execution is complete
-    res.write("All Notifications sent successfully!!!");
+    res.write("All Notifications sent successfully!!");
     res.end();
   } catch (error) {
     // Handle errors and send an error response
