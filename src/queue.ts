@@ -13,6 +13,7 @@ export interface DoneCallback {
 interface EnqueueProps {
   job: Job;
   delay?: number;
+  retry?: number;
 }
 
 export interface FunctionToExecuteCallbackProps {
@@ -59,6 +60,15 @@ class Queue {
     await this.redisClient.connect();
   }
 
+  // Disconnect redis connection
+  async disconnect(): Promise<void> {
+    return new Promise<void>((resolve) => {
+      this.redisClient.quit().then((status) => {
+        console.log(status);
+      });
+    });
+  }
+
   // Execute a job
   private async jobExecution(
     functionToExecute: ({
@@ -71,32 +81,57 @@ class Queue {
     enqueueProps: EnqueueProps
   ) {
     await new Promise<void>((resolve) => {
-      functionToExecute({
-        job: enqueueProps.job,
-        done: (error, result) => {
-          if (error) {
-            console.error(
-              `Error processing job ${enqueueProps.job.id}: ${error.message}`
-            );
-          } else {
-            console.log(
-              `Job ${enqueueProps.job.id} processed successfully. Result:`,
-              result
-            );
-          }
-          resolve();
-        },
-      });
+      let maxRetries = enqueueProps?.retry ?? 0;
+      let retryNumber = maxRetries;
+      let isSuccess = false;
+
+      const executeWithRetry = () => {
+        functionToExecute({
+          job: enqueueProps.job,
+          done: (error, result) => {
+            if (error) {
+              console.error(
+                `Error processing job ${enqueueProps.job.id}: ${error.message}`
+              );
+            } else {
+              console.log(
+                `Job ${enqueueProps.job.id} processed successfully. Result:`,
+                result
+              );
+              isSuccess = true;
+            }
+
+            if (isSuccess || retryNumber <= 0) {
+              if (retryNumber === 0) {
+                console.log("Max retry attempt reached!!!");
+              }
+              resolve();
+            } else {
+              // A delay is added between retries
+              setTimeout(() => {
+                retryNumber--;
+                console.log(`Retrying for ${maxRetries - retryNumber} time`);
+                executeWithRetry();
+              }, 1000);
+            }
+          },
+        });
+      };
+
+      executeWithRetry();
     });
   }
 
   // Enqueue a job
-  enqueue({ job, delay }: EnqueueProps): void {
-    this.redisClient.rPush(this.queueName, JSON.stringify({ job, delay }));
+  enqueue({ job, delay, retry }: EnqueueProps): void {
+    this.redisClient.rPush(
+      this.queueName,
+      JSON.stringify({ job, delay, retry })
+    );
   }
 
   // Dequeue a job
-  async dequeue(): Promise<EnqueueProps | null> {
+  private async dequeue(): Promise<EnqueueProps | null> {
     try {
       const result = await this.redisClient.lPop(this.queueName);
 
@@ -117,7 +152,8 @@ class Queue {
   ): Promise<void> {
     let continueJob: boolean = true;
     while (continueJob) {
-      const enqueueProps = await this.dequeue();
+      const enqueueProps: EnqueueProps | null = await this.dequeue();
+
       if (enqueueProps && enqueueProps.job) {
         if (enqueueProps.delay) {
           setTimeout(async () => {

@@ -1,6 +1,7 @@
 import express, { Express, Request, Response } from "express";
 import { executeSampleJobs } from "./example";
 import { executeNotificationSendingExample } from "./notificationSendingExample";
+import { simulateRetry } from "./retryMechnismExample";
 
 const app: Express = express();
 const port = 7000;
@@ -26,6 +27,12 @@ app.get("/send-notification", async (req: Request, res: Response) => {
     console.error("Error sending notifications:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
+});
+
+// Simulation of retry mechanism
+app.get("/retry", async (req: Request, res: Response) => {
+  await simulateRetry();
+  res.send("Retry Mechanism simulated");
 });
 
 app.listen(port, () => {
