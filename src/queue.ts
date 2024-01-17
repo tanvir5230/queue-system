@@ -60,13 +60,6 @@ class Queue {
     await this.redisClient.connect();
   }
 
-  // Disconnect redis connection
-  // async disconnect(): Promise<void> {
-  //   this.redisClient.quit().then((value) => {
-  //     console.log("Redis Connection is closed. " + value);
-  //   });
-  // }
-
   // Execute a job
   private async jobExecution(
     functionToExecute: ({
@@ -162,6 +155,7 @@ class Queue {
         }
       } else {
         continueJob = false;
+        this.redisClient.disconnect();
       }
     }
   }

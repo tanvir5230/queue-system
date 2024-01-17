@@ -20,5 +20,4 @@ export const simulateRetry = async () => {
   };
 
   await retryQueue.processJobs(failingFunction);
-  //   await retryQueue.disconnect();
 };
